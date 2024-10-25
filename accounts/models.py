@@ -61,7 +61,7 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=12, blank=True)
-    role = models.PositiveBigIntegerField(choices=ROLE_CHOICE, blank=True)
+    role = models.PositiveBigIntegerField(choices=ROLE_CHOICE, null=True, blank=True)
     
     #required fields
     date_joined = models.DateTimeField(auto_now_add=True)
