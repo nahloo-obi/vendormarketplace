@@ -1,5 +1,6 @@
 from django import forms
 from .models import User
+from vendor.models import Vendor
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
