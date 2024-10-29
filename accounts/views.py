@@ -8,7 +8,7 @@ from django.contrib import auth
 from .utils import detectUser
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
-from .utils import send_email_verification, send_password_reset_email
+from .utils import send_email_verification
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 
@@ -44,8 +44,12 @@ def registerUser(request):
             user.role = User.CUSTOMER
             form.save()
             
-            # send email verification to new user
-            send_email_verification(request, user)
+             # send email verification to new user
+
+            mail_subject = 'Email Verification'
+            email_template = 'accounts/emails/account_verification_email.html'
+
+            send_email_verification(request, user, mail_subject, email_template)
             messages.success(request, "Account Registeration Successful")
         
         else:
@@ -99,7 +103,10 @@ def registerVendor(request):
             vendor.save()
 
             # send email verification to new vendor
-            send_email_verification(request, user)
+            mail_subject = 'Email Verification'
+            email_template = 'accounts/emails/account_verification_email.html'
+
+            send_email_verification(request, user, mail_subject, email_template)
 
             messages.success(request, "Business registered successfully, awaiting aproval from admin")
             return redirect('registerVendor')
@@ -192,8 +199,13 @@ def forgot_password(request):
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email__exact=email)
 
-            send_password_reset_email(request, user)
+
+            mail_subject = 'Password Reset'
+            email_template = 'accounts/emails/reset_password_email.html'
+
+            send_email_verification(request, user, mail_subject, email_template)
             messages.success(request, "Password reset link has been sent to your email address")
+
             return redirect('login')
         else:
            messages.error(request, "Account does not exist")
@@ -202,8 +214,36 @@ def forgot_password(request):
     return render(request, 'accounts/forgot_password.html')
 
 def reset_password_validate(request, uidb64, token):
-    
-    return 
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.info(request, "Please reset your password")
+        return redirect('reset_password')
+    else:
+        messages.error(request, "Expired Link")
+        return redirect('myAccount')
+     
 
 def reset_password(request):
+    if request.method == "POST":
+        password  = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = User.objects.get(pk=uid)
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            messages.success(request, "Password reset successfully")
+            return redirect('login')
+        else:
+            messages.error(request, "Password do not match!")
+            return redirect('reset_password')
+
     return render(request, 'accounts/reset_password.html')

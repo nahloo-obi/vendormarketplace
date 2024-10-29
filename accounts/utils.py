@@ -20,12 +20,10 @@ def detectUser(user):
         return redirecturl
     
 
-def send_email_verification(request, user):
+def send_email_verification(request, user, mail_subject, email_template):
     from_email = settings.DEFAULT_FROM_EMAIL
-
     site  = get_current_site(request)
-    mail_subject = "Account Activation"
-    email_body = render_to_string('accounts/emails/account_verification_email.html',{
+    email_body = render_to_string(email_template,{
         'user': user,
         'domain': site,
         'uid':urlsafe_base64_encode(force_bytes(user.pk)),
@@ -35,17 +33,3 @@ def send_email_verification(request, user):
     mail = EmailMessage(mail_subject, email_body, from_email, to=[to_email])
     mail.send()
 
-def send_password_reset_email(request, user):
-    from_email = settings.DEFAULT_FROM_EMAIL
-
-    site  = get_current_site(request)
-    mail_subject = "Password Reset"
-    email_body = render_to_string('accounts/emails/reset_password_email.html',{
-        'user': user,
-        'domain': site,
-        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': default_token_generator.make_token(user)
-    })
-    to_email = user.email
-    mail = EmailMessage(mail_subject, email_body, from_email, to=[to_email])
-    mail.send()
