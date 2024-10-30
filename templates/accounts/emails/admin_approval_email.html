@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+{%if is_approved %}
+Congratulations!, Your Business has been approved. You can now start your Business Journey. Goodluck!!!
+
+{% else %}
+We are sorry your Business has not been approved to be on our platform, for further details please contact support@vendors.com
+
+{% endif %}
+
+{% endautoescape %}
