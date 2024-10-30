@@ -11,6 +11,7 @@ from django.core.exceptions import PermissionDenied
 from .utils import send_email_verification
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from vendor.models import Vendor
 
 
 # restrict user switch
@@ -181,15 +182,16 @@ def myAccount(request):
     redirecturl = detectUser(user)
     return redirect(redirecturl)
 
-@login_required(login_url="login")
-@user_passes_test(check_customer_role)
+# @login_required(login_url="login")
+# @user_passes_test(check_customer_role)
 def customerDashboard(request):
     return render(request, "accounts/customerDashboard.html")
 
 
-@login_required(login_url="login")
-@user_passes_test(check_vendor_role)
+# @login_required(login_url="login")
+# @user_passes_test(check_vendor_role)
 def vendorDashboard(request):
+    
     return render(request, "accounts/vendorDashboard.html")
 
 
