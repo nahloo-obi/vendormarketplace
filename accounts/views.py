@@ -182,14 +182,14 @@ def myAccount(request):
     redirecturl = detectUser(user)
     return redirect(redirecturl)
 
-# @login_required(login_url="login")
-# @user_passes_test(check_customer_role)
+@login_required(login_url="login")
+@user_passes_test(check_customer_role)
 def customerDashboard(request):
     return render(request, "accounts/customerDashboard.html")
 
 
-# @login_required(login_url="login")
-# @user_passes_test(check_vendor_role)
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
 def vendorDashboard(request):
     
     return render(request, "accounts/vendorDashboard.html")

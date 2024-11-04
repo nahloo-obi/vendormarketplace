@@ -4,9 +4,13 @@ from accounts.forms import UserProfileForm
 from .models import Vendor
 from accounts.models import UserProfile
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from accounts.views import check_vendor_role
 # Create your views here.
 
 
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
 def vendor_profile(request):
     profile = get_object_or_404(UserProfile, user = request.user.pk)
     vendor = get_object_or_404(Vendor, user = request.user.pk)
