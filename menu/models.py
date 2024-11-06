@@ -8,13 +8,17 @@ class Category(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now=True)
-    update_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
 
     def __str__(self):
         return self.category_name
     
 class Item(models.Model):
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     item_title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=100, unique=True)
@@ -23,7 +27,7 @@ class Item(models.Model):
     image = models.ImageField(upload_to='itemimages')
     is_available =models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
-    update_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.item_title

@@ -1,0 +1,60 @@
+{%extends 'base.html' %}
+{%load static%}
+
+{% block content %}
+
+{% include 'includes/alerts.html' %}
+
+<div class="main-section">
+       {% include 'includes/cover.html' %}
+    <div class="page-section account-header buyer-logged-in">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    {% include 'includes/v_sidebar.html' %}
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <div class="user-dashboard loader-holder">
+                        <div class="user-holder">
+                            <h5 class="text-uppercase">Manage Your Restaurant</h5>
+									<hr>
+                                    <h6>Category: <span class="text-uppercase text-success">{{category}}</span></h6>
+                                    <a href="#", class="btn btn-info float-right m-1"><i class="fa fa-plus" aria-hidden="true"></i>Add Item</a>
+
+                                    {% if items %}
+                                    <table class="table table-hover table-borderless">
+                                        
+                                        <tbody>
+                                            {% for item in items %}
+                                          <tr>
+                                            <td class="text-left">{{forloop.counter}}</td>
+                                            <td class="text-left"><img src="{{item.image.url}}" alt="Item Image" width="40"></td>
+                                            <td class="text-left">
+                                                <a href=""><p class="mb-0 font-weight-bold">{{item}}</p>
+                                                <small class="text-muted">{{item.description}}</small>
+                                                </a>
+                                            </td>
+                                            <td><i class="fa fa-pencil" aria-hidden="true"></i> &nbsp;<i class="fa fa-trash text-danger" aria-hidden="true"></i></td>
+                                          </tr>
+                                          {% endfor %}
+                                         
+                                        </tbody>
+                                      </table>
+                                      {% else %}
+                                      <h5 class="text-center"> No items found.</h5>
+                                      <div class="text-center">
+                                        <a href="#" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i> &nbsp; Add item </a>
+                                      </div>
+                                      {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+
+{%endblock%}
+
