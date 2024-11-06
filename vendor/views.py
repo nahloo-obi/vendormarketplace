@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_vendor_role
 from menu.models import Category, Item
+from menu.forms import CategoryForm
+from django.template.defaultfilters import slugify
 # Create your views here.
 
 
@@ -73,4 +75,23 @@ def items_by_category(request, pk=None):
     return render(request, 'vendor/items_by_category.html', context)
 
 def add_category(request):
-    return render(request, 'vendor/add_category.html')
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+
+        if form.is_valid():
+            category_name = form.cleaned_data['category_name']
+            category = form.save(commit=False)
+            category.vendor = get_vendor(request)
+            category.slug = slugify(category_name)
+            form.save()
+            messages.success(request, 'Category added successfully')
+            return redirect('menu_builder') 
+
+        else:
+            form = CategoryForm()
+
+    form = CategoryForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'vendor/add_category.html', context)
