@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_vendor_role
 from menu.models import Category, Item
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm, ItemForm
 from django.template.defaultfilters import slugify
 # Create your views here.
 
@@ -74,6 +74,8 @@ def items_by_category(request, pk=None):
     }
     return render(request, 'vendor/items_by_category.html', context)
 
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
 def add_category(request):
     if request.method == "POST":
         form = CategoryForm(request.POST)
@@ -97,7 +99,8 @@ def add_category(request):
     }
     return render(request, 'vendor/add_category.html', context)
 
-
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
 def edit_category(request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     if request.method == "POST":
@@ -123,9 +126,62 @@ def edit_category(request, pk=None):
     }
     return render(request, 'vendor/edit_category.html', context)
 
-
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
 def delete_category(request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
     messages.success(request, "Category Deleted Successfully")
     return redirect('menu_builder')
+
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
+def add_item(request):
+    if request.method == "POST":
+        form = ItemForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            item_title = form.cleaned_data['item_title']
+            item = form.save(commit=False)
+            item.vendor = get_vendor(request)
+            item.slug = slugify(item_title)
+            form.save()
+            messages.success(request, 'Store item updated successfully')
+            return redirect('items_by_category', item.category.id) 
+
+        else:
+            print(form.errors)
+    else:
+        form = ItemForm()
+    context = {
+        'form': form
+    }
+
+
+    return render(request, 'vendor/add_item.html', context)
+
+
+def edit_item(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    if request.method == "POST":
+        form = ItemForm(request.POST, request.FILES, instance=item)
+
+        if form.is_valid():
+            item_title = form.cleaned_data['item_title']
+            item = form.save(commit=False)
+            item.vendor = get_vendor(request)
+            item.slug = slugify(item_title)
+            form.save()
+            messages.success(request, 'Item updated successfully')
+            return redirect('items_by_category', item.category.id)
+
+        else:
+            print(form.errors)
+    else:
+        form = ItemForm(instance=item)
+
+    context = {
+        'form': form,
+        'item' : item
+    }
+    return render(request, 'vendor/edit_item.html', context)

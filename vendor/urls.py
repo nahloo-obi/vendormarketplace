@@ -9,8 +9,14 @@ urlpatterns = [
     path('menu-builder/', views.menu_builder, name='menu_builder'),
     path('menu-builder/category/<int:pk>', views.items_by_category, name='items_by_category'),
 
+    #menu crud operation
     path('menu-builder/category/add/', views.add_category, name='add_category'),
     path('menu-builder/category/edit/<int:pk>', views.edit_category, name='edit_category'),
-    path('menu-builder/category/delete/<int:pk>', views.delete_category, name='delete_category')
+    path('menu-builder/category/delete/<int:pk>', views.delete_category, name='delete_category'),
+
+    #item crud operation
+    path('menu-builder/item/add/', views.add_item, name='add_item'),
+    path('menu-builder/item/edit/<int:pk>', views.edit_item, name='edit_item'),
+
 
 ]
