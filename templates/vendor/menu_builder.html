@@ -19,6 +19,7 @@
                             <h5 class="text-uppercase">Build your Item Menu</h5>
 									<hr>
                                     <h6>Menu Categories</h6>
+                                    {% if categories %}
                                     <a href="{% url 'add_category' %}", class="btn btn-info float-right m-1"><i class="fa fa-plus" aria-hidden="true"></i>Add Category</a>
                                     <a href="{% url 'add_item' %}", class="btn btn-info float-right m-1"><i class="fa fa-plus" aria-hidden="true"></i>Add Item</a>
 
@@ -39,6 +40,13 @@
                                          
                                         </tbody>
                                       </table>
+                                      {% else %}
+                                        <div class="h5">No Categories found</div>
+                                        <div class="div text-center">
+                                            <a href="{% url 'add_category' %}" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i>Add Category</a>
+                                        </div>
+
+                                      {% endif %}
                             
                         </div>
                     </div>

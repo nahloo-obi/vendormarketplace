@@ -17,6 +17,8 @@ urlpatterns = [
     #item crud operation
     path('menu-builder/item/add/', views.add_item, name='add_item'),
     path('menu-builder/item/edit/<int:pk>', views.edit_item, name='edit_item'),
+    path('menu-builder/item/delete/<int:pk>', views.delete_item, name='delete_store_item'),
+
 
 
 ]

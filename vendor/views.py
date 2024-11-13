@@ -153,6 +153,7 @@ def add_item(request):
             print(form.errors)
     else:
         form = ItemForm()
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
     context = {
         'form': form
     }
@@ -185,3 +186,12 @@ def edit_item(request, pk):
         'item' : item
     }
     return render(request, 'vendor/edit_item.html', context)
+
+
+@login_required(login_url="login")
+@user_passes_test(check_vendor_role)
+def delete_item(request, pk=None):
+    item = get_object_or_404(Item, pk=pk)
+    item.delete()
+    messages.success(request, "Item Deleted Successfully")
+    return redirect('items_by_category', item.category.id)
