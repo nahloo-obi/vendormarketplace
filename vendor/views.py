@@ -180,6 +180,7 @@ def edit_item(request, pk):
             print(form.errors)
     else:
         form = ItemForm(instance=item)
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
 
     context = {
         'form': form,

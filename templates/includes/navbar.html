@@ -3,13 +3,13 @@
     <!-- Header Start -->
     <header id="header">
         <div class="main-header">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="logo">
                             <figure>
                                 <a href="{% url 'home' %}" class="light-logo">
-                                    <img src="{% static 'extra-images/listing-logo1.png' %}" alt="FoodBakery">
+                                    <img src="{% static 'extra-images/listing-logo1.png' %}" alt="African Stores">
                                 </a>
                             </figure>
                         </div>
@@ -29,6 +29,10 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 
                         <div class="login-option">
+
+                            <a href="{% url 'marketplace' %}" class="btn btn-outline-danger text-uppercase font-weight-bold">Marketplace</a>
+                
+        
                             {%if user.is_authenticated%}
                             <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'myAccount' %}">My Account</a>
 
