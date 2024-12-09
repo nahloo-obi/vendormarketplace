@@ -21,7 +21,9 @@
                                     
                                     <div id="menu-item-list-6272" class="menu-itam-list">
                                       
-
+                                        <div class="text-center p-5" id="empty-cart" style="display: none;">
+                                            <h3> Cart is empty</h3>
+                                        </div>
 
                                         <ul>
                                             {% if cartItems %}
@@ -32,10 +34,11 @@
                                                 <div class="text-holder">
                                                     <h6>{{cartitem.item}}</h6>
                                                     <span>{{cartitem.item.description}}</span>
+                                                    <a href="{% url 'vendorDetail' cartitem.item.vendor.vendor_slug %}" class="badge badge-warning">{{cartitem.item.vendor}}</a>
                                                 </div>
                                                 <div class="price-holder">
                                                     <span class="price">${{cartitem.item.price}}</span>
-                                                    <a href="#" class="decrease_cart" data-id="{{cartitem.item.id}}" data-url="{% url 'decrease_cart' cartitem.item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
+                                                    <a href="#" class="decrease_cart" data-id="{{cartitem.item.id}}"id="{{cartitem.id}}" data-url="{% url 'decrease_cart' cartitem.item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
                                                     <label id="qty-{{cartitem.item.id}}">{{cartitem.quantity}}</label>
                                                     <a href="#" class="add_to_cart" data-id="{{cartitem.item.id}}" data-url="{% url 'add_to_cart' cartitem.item.id %}"><i class="icon-plus4 text-color"></i></a>
                                                     <a href="#" class="delete_cart" data-id="{{cartitem.id}}" data-url="{% url 'delete_cart' cartitem.id %}"><i class="icon-delete text-color"></i></a>
@@ -87,7 +90,7 @@
                                                 <span class="currency">
                                                     $
                                                 </span>
-                                                <span id="subtotal">0</span>
+                                                <span id="subtotal">{{subtotal}}</span>
                                             </span>
                                         </li>
                                         <li style="list-style: none;">
@@ -96,7 +99,7 @@
                                                 <span class="currency">
                                                     $
                                                 </span>
-                                                <span id="tax">0</span>
+                                                <span id="tax">{{tax}}</span>
                                             </span>
                                         </li>
                                         <li style="list-style: none; font-weight: 600;">
@@ -105,7 +108,7 @@
                                                 <span class="currency">
                                                     $
                                                 </span>
-                                                <span id="total">0</span>
+                                                <span id="total">{{sum_total}}</span>
                                             </span>
                                         </li>
                                     </ul>

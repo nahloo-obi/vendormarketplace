@@ -4,7 +4,7 @@ from vendor.models import Vendor
 from menu.models import Category, Item
 from django.db.models import Prefetch
 
-from .context_processors import get_cart_counter
+from .context_processors import get_cart_counter, get_cart_amount
 from .models import Cart
 
 from django.contrib.auth.decorators import login_required
@@ -68,7 +68,8 @@ def add_to_cart(request, item_id=None):
                         'status': 'success',
                         'message': 'Item increased',
                         'cart_counter': get_cart_counter(request),
-                        'qty': check_cart.quantity
+                        'qty': check_cart.quantity,
+                        'cart_amount': get_cart_amount(request),
 
                         })
 
@@ -80,7 +81,8 @@ def add_to_cart(request, item_id=None):
                         'status': 'success',
                         'message': 'Item added to cart',
                         'cart_counter': get_cart_counter(request),
-                        'qty': check_cart.quantity
+                        'qty': check_cart.quantity,
+                        'cart_amount': get_cart_amount(request),
                         })
                     
                 except:
@@ -95,7 +97,6 @@ def add_to_cart(request, item_id=None):
                 'message': 'Product does not exist'
                 })
         else:
-            print("error")
             return JsonResponse({
             'status': 'Failed',
             'message': 'Invalid request'
@@ -110,7 +111,6 @@ def add_to_cart(request, item_id=None):
     
 def decrease_cart(request, item_id):
     if request.user.is_authenticated:
-        print("here now")
         if is_ajax(request=request):
             try:
                 storeitem = Item.objects.get(id=item_id)
@@ -129,7 +129,8 @@ def decrease_cart(request, item_id):
                         return JsonResponse({
                         'status': 'success',
                         'cart_counter': get_cart_counter(request),
-                        'qty': check_cart.quantity
+                        'qty': check_cart.quantity,
+                        'cart_amount': get_cart_amount(request),
 
                         })
 
@@ -146,7 +147,6 @@ def decrease_cart(request, item_id):
                 'message': 'Product does not exist'
                 })
         else:
-            print("error")
             return JsonResponse({
             'status': 'Failed',
             'message': 'Invalid request'
@@ -161,7 +161,7 @@ def decrease_cart(request, item_id):
 
 @login_required(login_url="login")
 def cart(request):
-    cart_items = Cart.objects.filter(user=request.user.pk)
+    cart_items = Cart.objects.filter(user=request.user.pk).order_by('created_at')
     
     context = {
         'cartItems': cart_items
@@ -177,7 +177,7 @@ def delete_cart(request, cart_id):
                 cart_item = Cart.objects.get(user=request.user, id=cart_id)
                 if cart_item:
                     cart_item.delete()
-                    return JsonResponse({'status': 'success', 'message': 'Item removed from cart!', 'cart_counter': get_cart_counter(request)})
+                    return JsonResponse({'status': 'success', 'message': 'Item removed from cart!', 'cart_counter': get_cart_counter(request), 'cart_amount': get_cart_amount(request),})
                 
             except:
                  return JsonResponse({

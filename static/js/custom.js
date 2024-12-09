@@ -102,6 +102,13 @@ $(document).ready(function(){
                 else{
                     $('#cart_counter').html(response.cart_counter['cart_count']);
                     $('#qty-'+ food_id).html(response.qty)
+
+                    //generate amount
+                    generateCartAmount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['sum_total']
+                    )
                 }
             }
         })
@@ -119,8 +126,9 @@ $(document).ready(function(){
     $('.decrease_cart').on('click', function(e){
         e.preventDefault()
 
-        url = $(this).attr('data-url')
-        food_id = $(this).attr('data-id')
+        url = $(this).attr('data-url');
+        food_id = $(this).attr('data-id');
+        cart_id = $(this).attr('id');
 
         
 
@@ -144,8 +152,21 @@ $(document).ready(function(){
                 }else{
                     $('#cart_counter').html(response.cart_counter['cart_count']);
                     $('#qty-'+ food_id).html(response.qty)
+
+                    generateCartAmount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['sum_total']
+                    )
+
+                    if(window.location.pathname == '/cart/'){
+                        removeCartItem(response.qty, cart_id )
+                        checkEmptyCart();
+                    }
                 }
                 
+                
+
             }
         })
     })
@@ -175,7 +196,18 @@ $(document).ready(function(){
                     $('#cart_counter').html(response.cart_counter['cart_count']);
                     swal(response.status, response.message, 'success')
 
+                    generateCartAmount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['sum_total']
+                    )
+
+                    if (window.location.pathname == '/cart/'){
+
                     removeCartItem(0, cart_id)
+                    checkEmptyCart();
+
+                    }
                 }
                 
             }
@@ -185,12 +217,37 @@ $(document).ready(function(){
     //delete cart without reloading page if quantity is zero
 
     function removeCartItem(cartItemQty, cart_id){
-        if (cartItemQty <=0 ){
-            document.getElementById("cart-item-"+cart_id).remove()
+            if (cartItemQty <=0 ){
+                document.getElementById("cart-item-"+cart_id).remove()
+            }
+        
+        
+    }
+
+
+    //check if cart is empty
+
+    function checkEmptyCart(){
+        var cart_counter = document.getElementById('cart_counter').innerHTML
+        if (cart_counter == 0) {
+            document.getElementById("empty-cart").style.display = "block";
         }
+    }
+
+    //apply cart amount
+
+    function generateCartAmount(subtotal, tax, sum_total){
+        if(window.location.pathname == '/cart/'){
+            $('#subtotal').html(subtotal)
+            $('#tax').html(tax)
+            $('#total').html(sum_total)
+        }
+        
     }
 
 
 });
+
+
 
 
