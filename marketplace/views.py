@@ -102,6 +102,66 @@ def add_to_cart(request, item_id=None):
     else:
 
         return JsonResponse({
-            'status': 'Failed',
+            'status': 'login_required',
             'message': 'Please Login to add to cart'
         })
+    
+def decrease_cart(request, item_id):
+    if request.user.is_authenticated:
+        print("here now")
+        if is_ajax(request=request):
+            try:
+                storeitem = Item.objects.get(id=item_id)
+                try:
+                    
+                    check_cart_item = Cart.objects.filter(user=request.user, item=storeitem)
+                    if check_cart_item.exists():
+                        check_cart = check_cart_item[0]
+                        if check_cart.quantity > 1:
+                            check_cart.quantity -= 1
+                            check_cart.save()
+                        else:
+                            check_cart.delete()
+                            check_cart.quantity = 0
+
+                        return JsonResponse({
+                        'status': 'success',
+                        'cart_counter': get_cart_counter(request),
+                        'qty': check_cart.quantity
+
+                        })
+
+                    
+                except:
+                    return JsonResponse({
+                        'status': 'failed',
+                        'message': 'Item does not existed'
+                        })
+
+            except:
+                return JsonResponse({
+                'status': 'Failed',
+                'message': 'Product does not exist'
+                })
+        else:
+            print("error")
+            return JsonResponse({
+            'status': 'Failed',
+            'message': 'Invalid request'
+        })
+    
+    else:
+
+        return JsonResponse({
+            'status': 'login_required',
+            'message': 'Please Login to add to cart'
+        })
+
+
+def cart(request):
+    cart_items = Cart.objects.filter(user=request.user.pk)
+    
+    context = {
+        'cartItems': cart_items
+    }
+    return render(request, 'marketplace/cart.html', context)
