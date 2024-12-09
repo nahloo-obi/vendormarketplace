@@ -149,6 +149,48 @@ $(document).ready(function(){
             }
         })
     })
+
+
+    // delete cart item
+    $('.delete_cart').on('click', function(e){
+        e.preventDefault()
+
+        url = $(this).attr('data-url')
+        cart_id = $(this).attr('data-id')
+
+        
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            
+            success: function(response){
+                
+                if(response.status=='Failed'){
+                    swal(response.message, '', 'error')
+
+
+
+                }else{
+                    $('#cart_counter').html(response.cart_counter['cart_count']);
+                    swal(response.status, response.message, 'success')
+
+                    removeCartItem(0, cart_id)
+                }
+                
+            }
+        })
+    })
+
+    //delete cart without reloading page if quantity is zero
+
+    function removeCartItem(cartItemQty, cart_id){
+        if (cartItemQty <=0 ){
+            document.getElementById("cart-item-"+cart_id).remove()
+        }
+    }
+
+
 });
 
 

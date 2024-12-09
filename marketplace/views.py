@@ -7,6 +7,8 @@ from django.db.models import Prefetch
 from .context_processors import get_cart_counter
 from .models import Cart
 
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 
@@ -157,7 +159,7 @@ def decrease_cart(request, item_id):
             'message': 'Please Login to add to cart'
         })
 
-
+@login_required(login_url="login")
 def cart(request):
     cart_items = Cart.objects.filter(user=request.user.pk)
     
@@ -165,3 +167,22 @@ def cart(request):
         'cartItems': cart_items
     }
     return render(request, 'marketplace/cart.html', context)
+
+
+def delete_cart(request, cart_id):
+    if request.user.is_authenticated:
+
+        if is_ajax(request=request):
+            try:
+                cart_item = Cart.objects.get(user=request.user, id=cart_id)
+                if cart_item:
+                    cart_item.delete()
+                    return JsonResponse({'status': 'success', 'message': 'Item removed from cart!', 'cart_counter': get_cart_counter(request)})
+                
+            except:
+                 return JsonResponse({
+                'status': 'Failed',
+                'message': 'Cart item does not exist!'
+                })
+        else:
+            return JsonResponse({})

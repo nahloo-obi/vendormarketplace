@@ -27,7 +27,7 @@
                                             {% if cartItems %}
 
                                             {%for cartitem in cartItems%}
-                                            <li>
+                                            <li id="cart-item-{{cartitem.id}}">
                                                 <div class="image-holder"> <img src="{{cartitem.item.image.url}}" alt=""></div>
                                                 <div class="text-holder">
                                                     <h6>{{cartitem.item}}</h6>
@@ -38,6 +38,7 @@
                                                     <a href="#" class="decrease_cart" data-id="{{cartitem.item.id}}" data-url="{% url 'decrease_cart' cartitem.item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
                                                     <label id="qty-{{cartitem.item.id}}">{{cartitem.quantity}}</label>
                                                     <a href="#" class="add_to_cart" data-id="{{cartitem.item.id}}" data-url="{% url 'add_to_cart' cartitem.item.id %}"><i class="icon-plus4 text-color"></i></a>
+                                                    <a href="#" class="delete_cart" data-id="{{cartitem.id}}" data-url="{% url 'delete_cart' cartitem.id %}"><i class="icon-delete text-color"></i></a>
 
                                                 </div>
                                             </li>
