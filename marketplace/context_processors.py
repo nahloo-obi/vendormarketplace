@@ -33,4 +33,4 @@ def get_cart_amount(request):
 
         sum_total = subtotal + tax
         
-        return dict(subtotal=subtotal, tax=tax, sum_total=sum_total)
+    return dict(subtotal=subtotal, tax=tax, sum_total=sum_total)

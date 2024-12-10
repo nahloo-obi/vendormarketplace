@@ -1,4 +1,5 @@
 {%extends 'base.html' %}
+
 {%load static%}
 
 {% block content %}
@@ -58,11 +59,11 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					{% if profile.cover_phote %}
+																					{% if profile.cover_photo %}
 
 																					<img class="thumbnail" src="{{profile.cover_photo.url}}" alt="Cover Photo">
 																					{% else %}
-																					<img class="thumbnail" src="{% static 'images/default-cover.png %}" alt="Cover Photo">
+																					<img class="thumbnail" src="{% static 'images/default-cover.png' %}" alt="Cover Photo">
 
 																					{% endif %}
 																				</div>
