@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from vendor.models import Vendor
 from menu.models import Category, Item
@@ -10,6 +10,9 @@ from .models import Cart
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
 # Create your views here.
 
 
@@ -190,22 +193,40 @@ def delete_cart(request, cart_id):
         
 
 def search(request):
-    address = request.GET['address']
-    latitude = request.GET['lat']
-    longitude = request.GET['lng']
-    radius = request.GET['radius']
-    keyword = request.GET['keyword']
+    if not 'address' in request.GET:
+        return redirect('marketplace')
+    else:
 
-    #get vendors by item
-    fetch_vendor_by_store_item = Item.objects.filter(item_title__icontains=keyword, is_available=True).values_list('vendor', flat=True)
+        address = request.GET['address']
+        latitude = request.GET['lat']
+        longitude = request.GET['lng']
+        radius = request.GET['radius']
+        keyword = request.GET['keyword']
 
-    vendors = Vendor.objects.filter(Q(id__in=fetch_vendor_by_store_item) | Q(vendor_name__icontains=keyword, is_approved=True, user__is_active=True))
+        #get vendors by item
+        fetch_vendor_by_store_item = Item.objects.filter(item_title__icontains=keyword, is_available=True).values_list('vendor', flat=True)
 
-    vendor_count = vendors.count()
+        vendors = Vendor.objects.filter(Q(id__in=fetch_vendor_by_store_item) | Q(vendor_name__icontains=keyword, is_approved=True, user__is_active=True))
 
-    context ={
-        'vendors': vendors,
-        'vendor_count': vendor_count
-    }
+        if latitude and longitude and radius:
+            pnt = GEOSGeometry('POINT(%s %s)' % (longitude, latitude))  # using string representation technique
 
-    return render(request, 'marketplace/listings.html', context)
+            vendors = Vendor.objects.filter(
+                Q(id__in=fetch_vendor_by_store_item) | Q(vendor_name__icontains=keyword, 
+                    is_approved=True, user__is_active=True, 
+                    user_profile__location__distance_lte=(pnt, D(km=radius)))
+                        ).annotate(distance=Distance("user_profile__location", pnt)
+                                ).order_by('distance')
+            
+            for v in vendors:
+                v.kms = round(v.distance.km, 1)
+
+        vendor_count = vendors.count()
+
+        context ={
+            'vendors': vendors,
+            'vendor_count': vendor_count,
+            'source_location': address,
+        }
+
+        return render(request, 'marketplace/listings.html', context)
