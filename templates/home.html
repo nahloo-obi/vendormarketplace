@@ -88,9 +88,9 @@
                             <li class="has-border">
                                 <figure>
                                     {% if vendor.user_profile.profile_picture %}
-                                    <a href="#"><img src="{{ vendor.user_profile.profile_picture.url}}" class="attachment-full size-full wp-post-image" alt=""></a>
+                                    <a href="{% url 'vendorDetail' vendor.vendor_slug %}"><img src="{{ vendor.user_profile.profile_picture.url}}" class="attachment-full size-full wp-post-image" alt=""></a>
                                     {% else %}
-                                    <a href="#"><img src="{% static 'images/default-profile.png' %}" class="attachment-full size-full wp-post-image" alt=""></a>
+                                    <a href="{% url 'vendorDetail' vendor.vendor_slug %}"><img src="{% static 'images/default-profile.png' %}" class="attachment-full size-full wp-post-image" alt=""></a>
 
                                     {% endif %}
                                 </figure>
@@ -111,7 +111,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="element-title align-center">
-                        <h2>Choose From Most Popular Restaurants</h2>
+                        <h2>Choose From Nearby Restaurants</h2>
                         <p>Cum doctus civibus efficiantur in imperdiet deterruisset.</p>
                     </div>
                 </div>
@@ -123,8 +123,9 @@
                                 <div class="list-post featured">
                                     <div class="img-holder">
                                         <figure>
-                                            <a href="#">
-                                                {% if vendor.user_profile.profile_picture %}
+                                            {% if vendor.user_profile.profile_picture %}
+                                            <a href="{% url 'vendorDetail' vendor.vendor_slug %}">
+                                                
                                                 <img src="{{ vendor.user_profile.profile_picture.url}}" class="img-thumb wp-post-image" alt="">
                                                 {% else %}
                                                 <img src="{% static 'images/default-profile.png' %}" class="img-thumb wp-post-image" alt="">
@@ -140,13 +141,18 @@
                                        
                                         <div class="post-title">
                                             <h5>
-                                                <a href="#">{{vendor}}</a>
+                                                <a href="{% url 'vendorDetail' vendor.vendor_slug %}">{{vendor}}</a>
                                             </h5>
                                         </div>
                                         {% if vendor.user_profile.city and vendor.user_profile.state and vendor.user_profile.pin_code %}
                                         <span>{{vendor.user_profile.city}}, {{vendor.user_profile.state}}, {{vendor.user_profile.pin_code}}</span>
 
                                         {% endif %}
+
+                                        {%if vendor.kms %}
+                                            <br>
+                                            <span><small><b>{{vendor.kms}}km</b>away</small></span>
+                                        {%endif%}
                                     </div>
                                     
                                 </div>
