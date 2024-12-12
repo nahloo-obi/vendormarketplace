@@ -227,9 +227,9 @@ def add_opening_hours(request):
             try:
                 hour = OpeningHours.objects.create(vendor=get_vendor(request), day=day, from_hour=from_hour, to_hour=to_hour, is_closed=is_closed)
                 if hour:
-                    #day = OpeningHours.objects.get(id=hour.id)
+                    day = OpeningHours.objects.get(id=hour.id)
                     
-                    if hour.is_closed:
+                    if day.is_closed:
                         response = {'status': 'success', 'id': hour.id, 'day': day.get_day_display(), 'is_closed': 'Closed'}
 
                     else:
@@ -248,5 +248,9 @@ def add_opening_hours(request):
             return HttpResponse('Invalid request')
         
 
-def remove_opening_hours(request):
-    pass
+def remove_opening_hours(request, pk):
+    if request.user.is_authenticated:
+        if is_ajax(request=request):
+            hour = get_object_or_404(OpeningHours, pk=pk)
+            hour.delete()
+            return JsonResponse({'status': 'success', 'id': pk})
