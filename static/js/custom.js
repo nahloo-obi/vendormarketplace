@@ -106,7 +106,7 @@ $(document).ready(function(){
                     //generate amount
                     generateCartAmount(
                         response.cart_amount['subtotal'],
-                        response.cart_amount['tax'],
+                        response.cart_amount['tax_dict'],
                         response.cart_amount['sum_total']
                     )
                 }
@@ -155,7 +155,7 @@ $(document).ready(function(){
 
                     generateCartAmount(
                         response.cart_amount['subtotal'],
-                        response.cart_amount['tax'],
+                        response.cart_amount['tax_dict'],
                         response.cart_amount['sum_total']
                     )
 
@@ -198,7 +198,7 @@ $(document).ready(function(){
 
                     generateCartAmount(
                         response.cart_amount['subtotal'],
-                        response.cart_amount['tax'],
+                        response.cart_amount['tax_dict'],
                         response.cart_amount['sum_total']
                     )
 
@@ -236,11 +236,15 @@ $(document).ready(function(){
 
     //apply cart amount
 
-    function generateCartAmount(subtotal, tax, sum_total){
+    function generateCartAmount(subtotal, tax_dict, sum_total){
         if(window.location.pathname == '/cart/'){
             $('#subtotal').html(subtotal)
-            $('#tax').html(tax)
             $('#total').html(sum_total)
+        }
+        for(key1 in tax_dict){
+            for(key2 in tax_dict[key1]){
+                $('#tax-'+key1).html(tax_dict[key1][key2])
+            }
         }
         
     }

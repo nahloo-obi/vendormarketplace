@@ -15,7 +15,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
 
-from datetime import date
+from datetime import date, datetime
 # Create your views here.
 
 
@@ -45,8 +45,10 @@ def vendor_detail(request, vendor_slug):
     #Check current day opening hour
     get_today = date.today()
     today = get_today.isoweekday()    #to get the week day number
-    
+
     current_day_opening_hour = OpeningHours.objects.filter(vendor=vendor, day=today)
+
+
 
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user.pk)
@@ -59,7 +61,8 @@ def vendor_detail(request, vendor_slug):
         'categories': categories,
         'cart_items' : cart_items,
         'opening_hours': opening_hours,
-        'current_day_opening_hour': current_day_opening_hour
+        'current_day_opening_hour': current_day_opening_hour,
+        
     }
 
     return render(request, 'marketplace/vendor_detail.html', context)
