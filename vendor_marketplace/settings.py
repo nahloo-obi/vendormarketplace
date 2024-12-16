@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'marketplace',
     'django.contrib.gis',
     'customers',
+    'orders',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

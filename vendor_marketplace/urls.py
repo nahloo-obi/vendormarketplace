@@ -34,6 +34,11 @@ urlpatterns = [
     #search
     path('search/', MarketplaceViews.search, name='search'),
 
+
+    #CHECKOUT
+    path('checkout/', MarketplaceViews.checkout, name='checkout' ),
+    
+
 ]
 
 
