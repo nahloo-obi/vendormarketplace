@@ -37,7 +37,10 @@ urlpatterns = [
 
     #CHECKOUT
     path('checkout/', MarketplaceViews.checkout, name='checkout' ),
-    
+
+    #order
+    path('orders/', include('orders.urls') ),
+
 
 ]
 
