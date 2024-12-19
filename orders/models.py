@@ -8,7 +8,7 @@ from menu.models import Item
 class Payment(models.Model):
     PAYMENT_METHOD = (
         ('PayPal', 'PayPal'),
-        ('RazorPay', 'RazorPay'),
+        ('Stripe', 'Stripe'),
 
     )
 

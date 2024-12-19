@@ -111,8 +111,21 @@
                                                 <span id="total">{{sum_total}}</span>
                                             </span>
                                         </li>
-
+                                        {% if order.payment_method == 'PayPal' %}
                                         <div id="paypal-button-container"></div>
+                                        {% elif order.payment_method == 'Stripe' %}
+                                        <form action="{% url 'create-checkout-session' %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="total" value={{sum_total}}>
+                                            <input type="hidden" name="order" value={{order.id}}>
+                                            <input type="hidden" name="order_number" value='{{order.order_number}}'>
+                                            <input type="hidden" name="stripe_payment_method" value='Stripe'>
+                                            
+                                            <button type="submit">Pay with Stripe</button>
+                                        </form>
+                                        
+
+                                        {% endif %}
 
                                     </ul>
                                    </div>

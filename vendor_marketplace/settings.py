@@ -176,4 +176,7 @@ GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo\gdal.dll
 
 
 PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+STRIPE_SECRET_KEY_TEST=config('STRIPE_SECRET_KEY_TEST')
+STRIPE_WEBHOOK_SECRET=config('STRIPE_WEBHOOK_SECRET')
+
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
