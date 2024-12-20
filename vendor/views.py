@@ -12,6 +12,7 @@ from menu.models import Category, Item
 from menu.forms import CategoryForm, ItemForm
 from django.template.defaultfilters import slugify
 from marketplace.views import is_ajax
+from orders.models import Order, OrderedItem
 
 # Create your views here.
 
@@ -254,3 +255,19 @@ def remove_opening_hours(request, pk):
             hour = get_object_or_404(OpeningHours, pk=pk)
             hour.delete()
             return JsonResponse({'status': 'success', 'id': pk})
+
+
+def order_detail(request, order_number):
+    try:
+        order = Order.OBJECTS.GET(order_number=order_number, is_ordered=True)
+        ordered_item = OrderedItem.objects.filter(order=order, storeitem__vendor = get_vendor(request))
+
+        context = {
+            'order': order,
+            'ordered_item': ordered_item
+        }
+
+    except:
+        return redirect('vendor')
+    
+    return render(request, 'vendor/order_detail.html', context)
