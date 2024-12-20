@@ -13,6 +13,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from vendor.models import Vendor
 from django.template.defaultfilters import slugify
+from orders.models import Order
 
 
 # restrict user switch
@@ -188,7 +189,15 @@ def myAccount(request):
 @login_required(login_url="login")
 @user_passes_test(check_customer_role)
 def customerDashboard(request):
-    return render(request, "accounts/customerDashboard.html")
+    orders = Order.object.filter(user=request.user, is_ordered = True)
+    recent_orders = orders[:5]
+
+    context = {
+        'orders': orders,
+        'orders_count': orders.count(),
+        'recent_orders': recent_orders,
+    }
+    return render(request, "accounts/customerDashboard.html", context)
 
 
 @login_required(login_url="login")
