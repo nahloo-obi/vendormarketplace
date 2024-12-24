@@ -98,11 +98,6 @@ class Order(models.Model):
         }
 
         return context
-
-
-
-
-        return vendor
     
     def __str__(self):
         return self.order_number

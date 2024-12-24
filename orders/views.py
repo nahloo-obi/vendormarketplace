@@ -7,13 +7,14 @@ from marketplace.context_processors import get_cart_amount
 from marketplace.views import is_ajax
 from .forms import OrderForm
 from .models import Order, Payment, OrderedItem
-from .utils import generate_order_number
+from .utils import generate_order_number, order_total_by_vendor
 from accounts.utils import send_notification
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import os
 from menu.models import Item
+
 
 #stripe payment
 import stripe # type: ignore
@@ -162,6 +163,8 @@ def order_complete_paypal(request):
 def payment_gateway_handler(order_number, transaction_id, payment_method, status):
 
     try:
+        base_url = os.getenv('BASE_URL', 'http://127.0.0.1:8000')
+
         order = Order.objects.get(order_number=order_number)
 
         payment = Payment(user=order.user, transaction_id=transaction_id, payment_method=payment_method, amount=order.total, status=status)
@@ -190,10 +193,21 @@ def payment_gateway_handler(order_number, transaction_id, payment_method, status
         mail_subject = "Thank you for ordering from our store"
         mail_template = "orders/order_confirmation_email.html"
 
+        ordered_item = OrderedItem.objects.filter(order=order)
+        customer_subtotal = 0
+        for item in ordered_item:
+            customer_subtotal += (item.price * item.quantity)
+
+        tax_data = json.loads(order.tax_data)
+
         context ={
             'user': order.user,
             'order': order,
-            'to_email': order.email
+            'to_email': order.email,
+            'ordered_item':ordered_item,
+            'domain': base_url,
+            'customer_subtotal': customer_subtotal,
+            'tax_data': tax_data,
         }
 
         #send notification to customers
@@ -209,11 +223,18 @@ def payment_gateway_handler(order_number, transaction_id, payment_method, status
             if item.item.vendor.user.email not in to_emails:
                 to_emails.append(item.item.vendor.user.email)
 
-        context ={
-            'order': order,
-            'to_email': to_emails,
-        }
-        send_notification(mail_subject, mail_template, context)
+                ordered_item_to_vendor = OrderedItem.objects.filter(order-order, storeitem__vendor = item.storeitem.vendor)
+
+                context ={
+                    'order': order,
+                    'to_email': item.storeitem.vendor.user.email,
+                    'ordered_item_to_vendor': ordered_item_to_vendor,
+                    'vendor_subtotal': order_total_by_vendor(order, item.storeitem.vendor.id)['subtotal'],
+                    'tax_data': order_total_by_vendor(order, item.storeitem.vendor.id)['tax_dict'],
+                    'vendor_grand_total': order_total_by_vendor(order, item.storeitem.vendor.id)['grand_total'],
+                }
+
+                send_notification(mail_subject, mail_template, context)
 
         #cart_items.delete()
 
