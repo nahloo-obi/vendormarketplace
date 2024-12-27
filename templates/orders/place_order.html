@@ -226,6 +226,7 @@
 
             },
             success: function(response){
+                    console.log("json response")
                     console.log(response)
                     window.location.href = order_complete +'?order_no='+response.order_number+'&trans_id='+response.transaction_id
             }

@@ -14,7 +14,6 @@ def home(request):
     if get_or_set_current_location(request) is not None:
         
         pnt = GEOSGeometry('POINT(%s %s)' % (get_or_set_current_location(request)))  # using string representation technique
-        print(pnt)
         vendors = Vendor.objects.filter(user_profile__location__distance_lte=(pnt, D(km=1000))).annotate(distance=Distance("user_profile__location", pnt)).order_by('distance')
         
         for v in vendors:

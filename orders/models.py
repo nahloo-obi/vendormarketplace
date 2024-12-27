@@ -77,12 +77,12 @@ class Order(models.Model):
             total_data = json.loads(self.total_data)
             data = total_data.get(str(vendor.id))
 
-            
+            print(f"data{data}")
 
             for key, value in data.items():
                 subtotal += float(key)
                 value = value.replace("'", '"')
-                value  = json.loads
+                value  = json.loads(value)
                 tax_dict.update(value)
 
                 for i in value:

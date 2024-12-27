@@ -74,7 +74,6 @@ def place_order(request):
     total_tax = get_cart_amount(request)['tax']
     sum_total = get_cart_amount(request)['sum_total']
     tax_data = get_cart_amount(request)['tax_dict']
-    print(tax_data)
 
     if request.method == "POST":
         form = OrderForm(request.POST)
@@ -166,7 +165,6 @@ def payment_gateway_handler(order_number, transaction_id, payment_method, status
         base_url = os.getenv('BASE_URL', 'http://127.0.0.1:8000')
 
         order = Order.objects.get(order_number=order_number)
-
         payment = Payment(user=order.user, transaction_id=transaction_id, payment_method=payment_method, amount=order.total, status=status)
 
         payment.save()
@@ -189,6 +187,8 @@ def payment_gateway_handler(order_number, transaction_id, payment_method, status
             ordered_item.amount = item.item.price * item.quantity
 
             ordered_item.save()
+        
+
 
         mail_subject = "Thank you for ordering from our store"
         mail_template = "orders/order_confirmation_email.html"
@@ -223,18 +223,22 @@ def payment_gateway_handler(order_number, transaction_id, payment_method, status
             if item.item.vendor.user.email not in to_emails:
                 to_emails.append(item.item.vendor.user.email)
 
-                ordered_item_to_vendor = OrderedItem.objects.filter(order-order, storeitem__vendor = item.storeitem.vendor)
+                ordered_item_to_vendor = OrderedItem.objects.filter(order=order, storeitem__vendor = item.item.vendor)
 
                 context ={
                     'order': order,
-                    'to_email': item.storeitem.vendor.user.email,
+                    'to_email': item.item.vendor.user.email,
                     'ordered_item_to_vendor': ordered_item_to_vendor,
-                    'vendor_subtotal': order_total_by_vendor(order, item.storeitem.vendor.id)['subtotal'],
-                    'tax_data': order_total_by_vendor(order, item.storeitem.vendor.id)['tax_dict'],
-                    'vendor_grand_total': order_total_by_vendor(order, item.storeitem.vendor.id)['grand_total'],
+                    'vendor_subtotal': order_total_by_vendor(order, item.item.vendor.id)['subtotal'],
+                    'tax_data': order_total_by_vendor(order, item.item.vendor.id)['tax_data'],
+                    'vendor_grand_total': order_total_by_vendor(order, item.item.vendor.id)['grand_total'],
+                    'domain': base_url,
                 }
+               
+
 
                 send_notification(mail_subject, mail_template, context)
+        
 
         #cart_items.delete()
 
@@ -242,12 +246,11 @@ def payment_gateway_handler(order_number, transaction_id, payment_method, status
             'order_number': order_number,
             'transaction_id': transaction_id
         }
-
         return JsonResponse(response)
   
     
     except Exception as e:
-        print(f"error{e}")
+        print(f"error {e}")
         return HttpResponse("Error")
     
     

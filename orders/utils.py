@@ -16,15 +16,15 @@ def order_total_by_vendor(order, vendor_id):
     tax = 0
     tax_dict = {}
     
+    
     if order.total_data:
         total_data = json.loads(order.total_data)
         data = total_data.get(str(vendor_id))
 
-
         for key, value in data.items():
             subtotal += float(key)
             value = value.replace("'", '"')
-            value  = json.loads
+            value  = json.loads(value)
             tax_dict.update(value)
 
             for i in value:

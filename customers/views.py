@@ -12,22 +12,18 @@ import json
 
 @login_required(login_url='login')
 def customer_profile(request):
-    print('customer profile')
     profile = get_object_or_404(UserProfile, user = request.user.pk)
 
     if request.method == "POST":
-        print('post')
         profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
         user_form = UserInfoForm(request.POST, instance=request.user)
 
         if profile_form.is_valid() and user_form.is_valid():
-            print('no error')
             profile_form.save()
             user_form.save()
             messages.success(request, 'Profile Updated')
             return redirect('customer_profile')
         else:
-            print('error')
             print(profile_form.errors)
             print(user_form.errors)
 

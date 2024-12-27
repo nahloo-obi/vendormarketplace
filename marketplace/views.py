@@ -85,7 +85,6 @@ def add_to_cart(request, item_id=None):
                     check_cart_item = Cart.objects.filter(user=request.user, item=storeitem)
                     if check_cart_item.exists():
                         check_cart = check_cart_item[0]
-                        print("updating cart quantity")
                         check_cart.quantity += 1
                         check_cart.save()
                         return JsonResponse({
