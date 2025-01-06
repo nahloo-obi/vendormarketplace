@@ -13,7 +13,6 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - SECRET_KEY=${SECRET_KEY}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
       - DEBUG=${DEBUG}
       - DB_PORT=${DB_PORT}
