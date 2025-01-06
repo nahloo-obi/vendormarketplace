@@ -8,6 +8,7 @@ Django==5.1.2
 fonttools==4.55.2
 #GDAL @ file:///C:/Users/USER/projects/online%20vendor%20marketplace/vendor_marketplace/GDAL-3.8.4-cp311-cp311-win_amd64.whl#sha256=13115dae539ab85b7b4b5bf8b7eb13abf2026d95313cec0837bff034a8c25c58
 gdal==3.8.4
+gunicorn==23.0.0
 idna==3.10
 kiwisolver==1.4.7
 matplotlib==3.9.3
@@ -28,3 +29,4 @@ stripe==11.3.0
 typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.2.3
+whitenoise==6.8.2
