@@ -80,47 +80,64 @@
 
 # # Default command
 # CMD ["run.sh"]
-FROM python:3.10-alpine
-LABEL maintainer="nalu.com"
 
-ENV PYTHONBUFFERED 1
-ENV PROJ_DIR=/usr
-ENV PATH="/usr/local/bin:/usr/bin:/sbin:/bin:$PATH"
-ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 
-# Copy the requirements and project files
-COPY ./requirements.txt /requirements.txt
-COPY . /app
-COPY ./scripts /scripts
 
+
+# Base image
+FROM python:3.9-alpine
+
+# Set working directory
 WORKDIR /app
-EXPOSE 8000
 
-# Install dependencies
+# Install Python virtual environment and basic dependencies
 RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache \
+    /py/bin/pip install --upgrade pip
+
+# Update repositories, install dependencies, and debug proj installation
+RUN apk add --update --no-cache \
         postgresql-client \
         gdal gdal-dev \
         proj proj-dev \
-        geos geos-dev && \
-    apk add --update --no-cache --virtual .tmp-deps \
+        geos geos-dev \
         build-base postgresql-dev musl-dev linux-headers && \
     echo "Checking proj installation..." && \
-    ls -l /usr/bin/proj && \
-    proj --version && \
-    /py/bin/pip install -r requirements.txt && \
-    apk del .tmp-deps && \
-    adduser --disabled-password --no-create-home app && \
+    which proj || echo "proj binary not found!" && \
+    proj --version || echo "proj failed to run!" && \
+    ls -l /usr/bin && \
+    ls -l /usr/local/bin
+
+# Optional: Install proj from source if needed (uncomment if binary is missing)
+# RUN apk add --update --no-cache build-base curl && \
+#     curl -LO https://download.osgeo.org/proj/proj-9.3.0.tar.gz && \
+#     tar -xvzf proj-9.3.0.tar.gz && \
+#     cd proj-9.3.0 && \
+#     ./configure && \
+#     make && make install && \
+#     cd .. && rm -rf proj-9.3.0*
+
+# Install Python dependencies
+COPY requirements.txt /app/
+RUN /py/bin/pip install -r requirements.txt
+
+# Create application user and directories
+RUN adduser --disabled-password --no-create-home app && \
     mkdir -p /app/staticfiles /app/media && \
     chown -R app:app /app/staticfiles /app/media && \
-    chmod -R 755 /app/staticfiles /app/media && \
-    chmod -R +x /scripts
+    chmod -R 755 /app/staticfiles /app/media
 
-# Switch to non-root user
+# Copy application files
+COPY . /app/
+
+# Change permissions for startup scripts
+RUN chmod -R +x /scripts
+
+# Run the application as a non-root user
 USER app
 
-# Default command
-CMD ["run.sh"]
+# Expose the application port
+EXPOSE 8000
 
+# Command to run the application
+CMD ["/scripts/start.sh"]
 
