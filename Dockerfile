@@ -85,9 +85,9 @@ FROM python:3.10-alpine
 LABEL maintainer="nalu.com"
 
 ENV PYTHONBUFFERED 1
-ENV PROJ_DIR=/usr && \
-ENV PATH="/usr/bin:$PATH" && \
-ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH" && \
+ENV PROJ_DIR=/usr 
+ENV PATH="/usr/bin:$PATH" 
+ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 
 # Copy the requirements and project files
 COPY ./requirements.txt /requirements.txt
