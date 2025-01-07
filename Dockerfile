@@ -98,10 +98,12 @@ EXPOSE 8000
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache \
-        postgresql-client && \
+        postgresql-client \
+        gdal gdal-dev \
+        proj proj-dev \
+        geos geos-dev && \
     apk add --update --no-cache --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers && \
-    apk add --no-cache gdal gdal-dev && \
     /py/bin/pip install -r requirements.txt && \
     apk del .tmp-deps && \
     adduser --disabled-password --no-create-home app && \
