@@ -124,10 +124,11 @@ RUN apk add --update --no-cache \
     chmod -R 755 /app/staticfiles /app/media && \
     chmod -R +x /scripts
 
+ENV PATH="/scripts:/py/bin:$PATH"
 # Switch to non-root user
 USER app
 
 # Default command
-CMD ["/scripts/run.sh"]
+CMD ["run.sh"]
 
 
