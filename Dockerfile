@@ -85,6 +85,9 @@ FROM python:3.10-alpine
 LABEL maintainer="nalu.com"
 
 ENV PYTHONBUFFERED 1
+ENV PROJ_DIR=/usr && \
+ENV PATH="/usr/bin:$PATH" && \
+ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH" && \
 
 # Copy the requirements and project files
 COPY ./requirements.txt /requirements.txt
@@ -104,9 +107,6 @@ RUN python -m venv /py && \
         geos geos-dev && \
     apk add --update --no-cache --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers && \
-    ENV PROJ_DIR=/usr && \
-    ENV PATH="/usr/bin:$PATH" && \
-    ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH" && \
     proj --version && \
     /py/bin/pip install -r requirements.txt && \
     apk del .tmp-deps && \
