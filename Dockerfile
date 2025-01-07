@@ -85,7 +85,7 @@ FROM python:3.10-alpine
 LABEL maintainer="nalu.com"
 
 ENV PYTHONBUFFERED 1
-ENV PROJ_DIR=/usr 
+ENV PROJ_DIR=/usr/local
 ENV PATH="/usr/bin:$PATH" 
 ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 
