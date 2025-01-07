@@ -104,6 +104,10 @@ RUN python -m venv /py && \
         geos geos-dev && \
     apk add --update --no-cache --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers && \
+    ENV PROJ_DIR=/usr && \
+    ENV PATH="/usr/bin:$PATH" && \
+    ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH" && \
+    proj --version && \
     /py/bin/pip install -r requirements.txt && \
     apk del .tmp-deps && \
     adduser --disabled-password --no-create-home app && \
