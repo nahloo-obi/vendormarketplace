@@ -115,7 +115,7 @@ RUN apk add --update --no-cache \
     /py/bin/pip install --upgrade pip && \
     echo "Checking proj installation..." && \
     which proj && \
-    proj --version && \
+    proj -V && \
     /py/bin/pip install -r /requirements.txt && \
     apk del .tmp-deps && \
     adduser --disabled-password --no-create-home app && \
