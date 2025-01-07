@@ -124,6 +124,8 @@ RUN apk add --update --no-cache \
     chmod -R 755 /app/staticfiles /app/media && \
     chmod -R +x /scripts
 
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
 ENV PATH="/scripts:/py/bin:$PATH"
 # Switch to non-root user
 USER app
