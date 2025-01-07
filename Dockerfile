@@ -80,13 +80,12 @@
 
 # # Default command
 # CMD ["run.sh"]
-
 FROM python:3.10-alpine
 LABEL maintainer="nalu.com"
 
 ENV PYTHONBUFFERED 1
-ENV PROJ_DIR=/usr/local
-ENV PATH="/usr/bin:$PATH" 
+ENV PROJ_DIR=/usr
+ENV PATH="/usr/local/bin:/usr/bin:/sbin:/bin:$PATH"
 ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 
 # Copy the requirements and project files
@@ -107,6 +106,8 @@ RUN python -m venv /py && \
         geos geos-dev && \
     apk add --update --no-cache --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers && \
+    echo "Checking proj installation..." && \
+    ls -l /usr/bin/proj && \
     proj --version && \
     /py/bin/pip install -r requirements.txt && \
     apk del .tmp-deps && \
@@ -116,12 +117,10 @@ RUN python -m venv /py && \
     chmod -R 755 /app/staticfiles /app/media && \
     chmod -R +x /scripts
 
-# Set environment variables
-ENV PATH="/scripts:/py/bin:$PATH"
-
 # Switch to non-root user
 USER app
 
 # Default command
 CMD ["run.sh"]
+
 
