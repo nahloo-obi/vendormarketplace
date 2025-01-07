@@ -150,7 +150,7 @@ STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
-    
+
    "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
@@ -191,6 +191,9 @@ if DEBUG == True:
     os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
     #FOR POSTGIS 
     GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo\gdal.dll')
+
+if DEBUG == False:
+    GDAL_LIBRARY_PATH = os.getenv("GDAL_LIBRARY_PATH", "/usr/lib/libgdal.so")
 
 
 PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
