@@ -104,7 +104,7 @@ RUN apk add --update --no-cache \
         postgresql-client \
         gdal gdal-dev \
         proj proj-dev \
-        proj-util \   # Add proj-util to resolve the missing proj binary issue
+        proj-util \  
         geos geos-dev && \
     apk add --update --no-cache --virtual .tmp-deps \
         build-base \
