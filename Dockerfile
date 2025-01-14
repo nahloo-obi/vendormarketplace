@@ -90,6 +90,7 @@ ENV PROJ_DIR=/usr
 ENV PATH="/usr/local/bin:/usr/bin:/sbin:/bin:$PATH"
 ENV LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 ENV GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
+ENV GEOS_LIBRARY_PATH=/usr/lib/libgeos_c.so
 
 # Set working directory and expose port
 WORKDIR /app
@@ -103,6 +104,7 @@ COPY ./scripts /scripts
 # Install dependencies
 RUN apk add --update --no-cache \
         postgresql-client \
+        binutils \
         gdal gdal-dev \
         proj proj-dev \
         proj-util \  

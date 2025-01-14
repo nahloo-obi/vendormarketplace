@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'vendor_marketplace.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.postgresql',
+        #'ENGINE': 'django.db.backends.postgresql',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config('DB_NAME'),
         'PASSWORD': config('DB_PASSWORD'),
@@ -194,6 +194,7 @@ if DEBUG == True:
 
 if DEBUG == False:
     GDAL_LIBRARY_PATH = os.getenv("GDAL_LIBRARY_PATH", "/usr/lib/libgdal.so")
+    GEOS_LIBRARY_PATH = os.getenv("GEOS_LIBRARY_PATH", "/usr/lib/libgeos_c.so")
 
 
 PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
