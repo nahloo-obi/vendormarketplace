@@ -1981,8 +1981,7 @@ div.daterangepicker { border: 1px solid #eceef4; -webkit-box-shadow: none; box-s
 .wp-foodbakery .woocommerce button.button.alt:hover { background-color: #c33332; }
 
 
-/* COLOR START */
-/* assets/css/color.css */
+
 
 .text-color, .listing .post-title:hover h5 a, .pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus,
 .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus, .pagination > .active > span > a,
@@ -2128,8 +2127,7 @@ color:#cdcdcd !important;
 
 /* COLOR END */
 
-/* WIDGET START */
-/* assets/css/widget.css */
+
 
 /* Widget Style Start */
 /* Widget Title */
@@ -2322,7 +2320,7 @@ color:#cdcdcd !important;
 /* WIDGET END */
 
 /* RESPONSIVE START */
-/* assets/css/responsive.css */
+
 
 @media screen and (max-width: 1370px) {
 .wrapper-full_width .main-header .wide .col-lg-8 { width: 67%; }
@@ -3015,7 +3013,6 @@ ul.products:after { clear: both; display: block; content: ""; }
 /* Shop Widget Style */
 .widget.woocommerce { margin-bottom: 30px; }
 .widget.woocommerce h4 { position: relative; margin: 0 0 25px; padding: 0 0 20px; font-weight: 600 !important; }
-.widget.woocommerce h4:before, .woocommerce .woocommerce-tabs .tab-content h5:before { position: absolute; left: 0; bottom: 0; height: 7px; width: 100%; content: ""; background: url(../images/widget-sepretor.png); }
 .single.single-product.woocommerce.woocommerce-page .tab-content p { font: 400 14px/24px 'Lato', sans-serif; color: #999 }
 .single.single-product.woocommerce.woocommerce-page .tags-contents { width: 70%; margin: 0 auto; text-align: center; }
 .single.single-product.woocommerce.woocommerce-page .tags-contents li { display: inline-block; margin: 0 3px 20px 3px }
