@@ -26,3 +26,7 @@ def home(request):
         'vendors': vendors,
     }
     return render(request,'home.html', context )
+
+
+def test(request):
+    return render(request, "test.html")
