@@ -104,7 +104,10 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'USER': config('DB_USER'),
-        'PORT': config('DB_PORT')
+        'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',  # Force SSL for Render
+        },
     }
 }
 
